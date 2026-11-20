@@ -1,5 +1,9 @@
 # Déploiement sur Render
 
+> **Statut : déployé ✅** — service `isometric-city` (`srv-dc02l54s728c73catgdg`), plan `starter`, région Frankfurt.
+> URL : https://isometric-city-qgg8.onrender.com — auto-deploy activé sur `main`.
+> Dashboard : https://dashboard.render.com/web/srv-dc02l54s728c73catgdg
+
 Le projet est un Next.js **serveur** (App Router, route dynamique `/coop/[roomCode]`, `/coaster/coop/[roomCode]`) :
 il faut donc un **Web Service Node**, pas un Static Site.
 
