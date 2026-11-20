@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "next dev",
-    "build": "npm run compress-images && next build",
+    "build": "npm run ensure-sharp && npm run compress-images && next build",
+    "ensure-sharp": "node scripts/ensure-sharp.mjs",
     "start": "next start",
     "lint": "eslint .",
     "crop-screenshots": "bash scripts/crop-screenshots.sh",

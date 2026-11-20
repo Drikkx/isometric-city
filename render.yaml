@@ -5,7 +5,9 @@
 #
 # Notes:
 # - `npm run build` also runs the sprite compression script (sharp). It is a no-op
-#   for already-compressed assets, so build minutes stay low.
+#   for already-compressed assets, so build minutes stay low. `npm run ensure-sharp`
+#   first installs the platform-specific sharp binary when the lockfile (generated on
+#   macOS) does not provide it for Linux.
 # - No database is required: saves live in the browser (localStorage).
 #   Supabase is only needed for the multiplayer/coop feature.
 # - NODE_OPTIONS caps the V8 heap below the instance memory to avoid OOM kills

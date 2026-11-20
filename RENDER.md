@@ -41,6 +41,7 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=     # optionnel (multijoueur)
 
 - **Tailwind v3** est en dépendance normale, donc `npm ci --omit=dev` casserait le build → ne pas l'utiliser.
 - **`npm run build` lance aussi `node scripts/compress-images.mjs`** (sharp) : il ne régénère que les WebP manquants/obsolètes, donc c'est quasi instantané sur un build propre.
+- **sharp / lockfile macOS** : `package-lock.json` ne contient pas `@img/sharp-linux-x64`, donc `npm ci` sur Linux n'installe pas le binaire natif et `compress-images` plantait (`Could not load the "sharp" module using the linux-x64 runtime`). `scripts/ensure-sharp.mjs` (appelé en tête de `build`) installe le binaire manquant si besoin, et ne fait rien si sharp charge déjà. Correctif de fond : régénérer le lockfile avec les deps optionnelles multi-plateformes.
 - **`autoDeployTrigger: commit`** = redéploiement automatique à chaque push sur `main` (PR previews non activées).
 - **Free plan** : le service s'endort après ~15 min d'inactivité (premier chargement lent ~30–60 s) et 512 Mo de RAM → `next build` risque d'être limite avec `--max-old-space-size=2048` ; passer à `starter` (2 Go) est plus sûr.
 - **Domaine** : Render fournit `*.onrender.com`, puis Settings → Custom Domain. Pour que les balises Open Graph pointent vers ton domaine, remplace `https://iso-city.com` dans `metadataBase` (`src/app/layout.tsx`) et l'URL canonique / les images OG.
