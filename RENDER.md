@@ -3,6 +3,7 @@
 > **Statut : déployé ✅** — service `isometric-city` (`srv-dc02l54s728c73catgdg`), plan `starter`, région Frankfurt.
 > URL : https://isometric-city-qgg8.onrender.com — auto-deploy activé sur `main`.
 > Dashboard : https://dashboard.render.com/web/srv-dc02l54s728c73catgdg
+> Dernier déploiement réussi : `dep-dc02qmd9fdbs73cdhth0` (commit `15df9d34`), vérifié : `/`, `/coaster`, `/coop/<code>`, `/_gt/fr.json` en 200.
 
 Le projet est un Next.js **serveur** (App Router, route dynamique `/coop/[roomCode]`, `/coaster/coop/[roomCode]`) :
 il faut donc un **Web Service Node**, pas un Static Site.
@@ -22,7 +23,7 @@ Le fichier [`render.yaml`](render.yaml) décrit tout. Deux façons de l'utiliser
 | Réglage | Valeur |
 |---|---|
 | Runtime | Node |
-| Build Command | `npm ci && npm run build` |
+| Build Command | `NODE_ENV=development npm ci --include=dev && npm run build` |
 | Start Command | `npm run start -- --hostname 0.0.0.0 --port $PORT` |
 | Health Check Path | `/` |
 | Node version | 22 (via `NODE_VERSION=22.21.1`) |
@@ -39,7 +40,7 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=     # optionnel (multijoueur)
 
 ## Points d'attention
 
-- **Tailwind v3** est en dépendance normale, donc `npm ci --omit=dev` casserait le build → ne pas l'utiliser.
+- **`NODE_ENV=production` sur le service fait sauter les devDependencies** : `npm ci` n'installe alors que 219 paquets au lieu de 485, sans `autoprefixer`, `tailwindcss`, `typescript` ni `postcss` → `next build` échoue (`Cannot find module 'autoprefixer'`). D'où le `NODE_ENV=development npm ci --include=dev` dans la commande de build.
 - **`npm run build` lance aussi `node scripts/compress-images.mjs`** (sharp) : il ne régénère que les WebP manquants/obsolètes, donc c'est quasi instantané sur un build propre.
 - **sharp / lockfile macOS** : `package-lock.json` ne contient pas `@img/sharp-linux-x64`, donc `npm ci` sur Linux n'installe pas le binaire natif et `compress-images` plantait (`Could not load the "sharp" module using the linux-x64 runtime`). `scripts/ensure-sharp.mjs` (appelé en tête de `build`) installe le binaire manquant si besoin, et ne fait rien si sharp charge déjà. Correctif de fond : régénérer le lockfile avec les deps optionnelles multi-plateformes.
 - **`autoDeployTrigger: commit`** = redéploiement automatique à chaque push sur `main` (PR previews non activées).
